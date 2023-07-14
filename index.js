@@ -46,6 +46,43 @@ async function run() {
         res.send(result);
       });
 
+      app.get("/mytoys", async (req, res) => {
+      
+        let query = {};
+        if (req.query?.email) {
+          query = { selleremail: req.query.email };
+        }
+  
+        const result = await toysCollection.find(query).toArray();
+        res.send(result);
+      });
+
+      app.put('/updatetoy/:id',async(req,res)=>{
+        const id=req.params.id
+       
+        const toy=req.body
+        const filter={_id:new ObjectId(id)}
+        const options={upsert:true}
+        const updatedToy={
+          $set:{
+            Name:toy.Name,
+            pictureurl:toy.pictureurl,
+            SellerName:toy.SellerName,
+            selleremail:toy.selleremail,
+            price:toy.price,
+            rating:toy.rating,
+            quantity:toy.quantity,
+            subcategory:toy.subcategory,
+            description:toy.description
+
+          }
+        }
+        const result=await toysCollection.updateOne(filter,updatedToy,options)
+        res.send(result)
+    
+       })
+
+
 
     await client.db("admin").command({ ping: 1 });
     console.log(
