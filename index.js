@@ -36,9 +36,15 @@ async function run() {
       app.get('/toydetails/:id',async(req,res)=>{
         const id=req.params.id;
         const query = {_id:new ObjectId(id)}
-        const user=await toysCollection.findOne(query)
+        const user=await toysCollection.findOne(query);
         res.send(user)
        })
+
+       app.post("/addtoy", async (req, res) => {
+        const newtoy = req.body;
+        const result = await toysCollection.insertOne(newtoy);
+        res.send(result);
+      });
 
 
     await client.db("admin").command({ ping: 1 });
