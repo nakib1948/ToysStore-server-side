@@ -47,7 +47,6 @@ async function run() {
       });
 
       app.get("/mytoys", async (req, res) => {
-      
         let query = {};
         if (req.query?.email) {
           query = { selleremail: req.query.email };
@@ -55,6 +54,25 @@ async function run() {
   
         const result = await toysCollection.find(query).toArray();
         res.send(result);
+      });
+
+      app.post("/mytoys", async (req, res) => {
+
+        const {text}=req.body
+        let query = {};
+        if (req.query?.email) {
+          query = { selleremail: req.query.email };
+        }
+        if(text=="Lowest to Highest"){
+            const result = await toysCollection.find(query).sort({price:1}).collation({locale: "en_US", numericOrdering: true}).toArray();
+            res.send(result);
+        }
+        else if(text=="Highest to Lowest"){
+          const result = await toysCollection.find(query).sort({price:-1}).collation({locale: "en_US", numericOrdering: true}).toArray();
+          res.send(result);
+        }
+  
+       
       });
 
       app.put('/updatetoy/:id',async(req,res)=>{
