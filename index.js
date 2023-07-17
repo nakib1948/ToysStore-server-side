@@ -41,7 +41,7 @@ const verifyJWT = (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+  
 
     const toysCollection = client.db("ToysStore").collection("AllToys");
 
@@ -112,6 +112,11 @@ async function run() {
         else if(text=="Highest to Lowest"){
           const result = await toysCollection.find(query).sort({price:-1}).collation({locale: "en_US", numericOrdering: true}).toArray();
           res.send(result);
+        }
+        else if(text=="Default Price")
+        {
+          const result =await  toysCollection.find(query).toArray()
+          res.send(result)
         }
   
        
